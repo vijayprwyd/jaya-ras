@@ -1,1 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html,
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+
+    height: 100%;
+}
+
+:root {
+    --primary-bg: #003765;
+    --primary-fg: #FFFFFF;
+    --mat-expansion-header-indicator-color: white
+    --mat-toolbar-standard-height: 88;
+    --mat-toolbar-mobile-height: 64;
+    --mat-toolbar-container-background-color: #F2F6FD;
+
+}
+
+div.mat-expansion-panel-body {
+    padding: 0;
+    padding-left: 54px;
+    height: auto;
+    box-shadow: none;
+    color: white;
+    border: none;
+    text-shadow: none;
+    font-size: 12px;
+}
+
+.sidenav-accordion > .mat-expansion-panel{
+    box-shadow: none !important;
+}

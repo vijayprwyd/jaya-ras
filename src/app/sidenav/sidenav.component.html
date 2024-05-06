@@ -1,0 +1,52 @@
+<mat-sidenav-container class="sidenav-container" autosize>
+    <mat-sidenav #sidenav [ngClass]="{'example-sidenav-collapsed' : !isExpanded}" class="example-sidenav grow"
+        [mode]="isMobile ? 'side' : 'side'" opened="true">
+        <div class="sidebar-close-expanded" *ngIf="isExpanded">
+            <button mat-icon-button (click)="toggleSidebar()" class="sidebar-toggle-btn "
+                aria-label="Example icon button with a home icon">
+                <mat-icon class="-top-0.5 -left-0.5 icon1">close</mat-icon>
+            </button>
+        </div>
+        <div class="sidebar-close-button" *ngIf="!isExpanded">
+            <button mat-icon-button (click)="toggleSidebar()" class="sidebar-toggle-btn "
+                aria-label="Example icon button with a home icon">
+                <mat-icon>arrow_forward_ios</mat-icon>
+            </button>
+        </div>
+        <div class="my-9 px-4">
+            <div class="flex gap-4 h-5 items-center">
+                <mat-icon class="sidenav-text icon-display">account_circle</mat-icon>
+                <div class="text-white overflow-hidden whitespace-nowrap text-sm">John Doe</div>
+            </div>
+        </div>
+        <mat-accordion class="sidenav-accordion" (click)="isExpanded = true">
+            <mat-expansion-panel class="sidenav-expansion-panel" [hideToggle]="!isExpanded" (click)="toggleAccordion()">
+                <mat-expansion-panel-header class="sidenav-panel-header">
+                    <mat-panel-title class="sidenav-panel-title">
+                        <mat-icon mat-list-icon class="sidenav-text icon-display">home</mat-icon>
+                        <span class="sidenav-text" [ngClass]="{'hidden' : !isExpanded}">Maintenance</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <ul class="sidenav-panel-list">
+                    <li class="py-2 text-white1">Authorization</li>
+                    <li class="py-2 text-white1">Report mapping</li>
+                </ul>
+            </mat-expansion-panel>
+            <mat-expansion-panel class="sidenav-expansion-panel" [hideToggle]="!isExpanded" (click)="toggleAccordion()">
+                <mat-expansion-panel-header class="sidenav-panel-header">
+                    <mat-panel-title class="sidenav-panel-title">
+                        <mat-icon mat-list-icon class="sidenav-text icon-display">home</mat-icon>
+                        <span class="sidenav-text" [ngClass]="{'hidden' : !isExpanded}">Maintenance</span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <ul class="sidenav-panel-list">
+                    <li class="py-2 text-white1">Authorization</li>
+                    <li class="py-2 text-white1">Report mapping</li>
+                </ul>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-sidenav>
+    <mat-sidenav-content class="grow example-sidenav-content"
+        [style.margin-left.px]="isMobile? 0 : isExpanded ? 240 : 60">
+    </mat-sidenav-content>
+</mat-sidenav-container>
