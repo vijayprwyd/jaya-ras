@@ -1,26 +1,50 @@
 <div class="flex min-h-screen">
     <div class="grow flex justify-center items-center">
-        <div class="self-center bg-white max-w-[423px] h-[500px] w-full shadow-lg"></div>
-
+        <mat-card class="p-6 self-center bg-white max-w-[423px] w-full m-5 xl:m-0">
+            <div class="text-3xl text-blue font-bold">Welcome back!</div>
+            <div class="text-sm font-semibold text-blue mb-6">Smart Informtion and Analytics Solution (SIAS)</div>
+            <form class="flex flex-col">
+                <mat-form-field appearance="outline">
+                    <mat-icon matPrefix>sentiment_very_satisfied</mat-icon>
+                    <input matInput placeholder="User">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-icon matPrefix>sentiment_very_satisfied</mat-icon>
+                    <input matInput placeholder="Password" type="password">
+                </mat-form-field>
+                <div class="flex justify-between flex-wrap">
+                    <mat-checkbox class="text-blue" color="primary">Keep me Signed in</mat-checkbox>
+                    <button mat-button class="blue-100" type="button">Forgot Password?</button>
+                </div>
+                <div class="flex flex-col gap-4 mt-4 items-center justify-center ">
+                    <button mat-flat-button class="primary-gradient w-full">Basic</button>
+                    <div class="text-blue-100 mx-auto ">Or log in with</div>
+                    <div class="flex flex-wrap gap-2 text-blue">
+                        <button mat-stroked-button class="outline-button-primary font-bold"> <mat-icon>favorite</mat-icon>
+                            Face ID</button>
+                        <button mat-stroked-button class="outline-button-primary">
+                            <mat-icon>favorite</mat-icon>
+                            Touch ID</button>
+                    </div>
+                </div>
+            </form>
+        </mat-card>
     </div>
-    <div class="relative img-container flex flex-col items-center ">
+    <div class="relative img-container flex-col items-center hidden xl:flex">
         <div class="relative z-20 text-white w-6/12 py-14 text-sm">
             <div class="pb-4 font-bold text-lg">About SIAS</div>
-
-            <p class="pb-6">
+            <p class="text-sm">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
                 dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
             </p>
-            <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-            </p>
-            <div class="pt-10 pb-4 font-bold text-lg">Disclaimer</div>
-            <p>DEMO BANK will NEVER ask you to reveal your User ID or Password. Therefore, never disclose your credentials
+            <div class="py-3 font-bold text-lg">Disclaimer</div>
+            <p class="text-sm">DEMO BANK will NEVER ask you to reveal your User ID or Password. Therefore, never disclose your
+                credentials
                 (User ID, Password, OTP, PIN etc.) to anyone either through mail or over phone. If you receive any mail
-                asking you to update or authenticate your User ID or Password, please DO NOT fall into the trap of putting
+                asking you to update or authenticate your User ID or Password, please DO NOT fall into the trap of
+                putting
                 in your Password or OTP or PIN.</p>
-    
+
         </div>
         <img src="assets/login/bg.svg" alt="image" class="absolute top-0 max-h-screen object-cover w-full">
         <img src="assets/login/logo.png" alt="image" class="bg absolute right-0 object-cover logo z-10">
