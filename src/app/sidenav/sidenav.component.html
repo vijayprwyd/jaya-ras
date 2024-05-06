@@ -1,5 +1,5 @@
-<mat-sidenav-container class="sidenav-container" autosize>
-    <mat-sidenav #sidenav [ngClass]="{'example-sidenav-collapsed' : !isExpanded}" class="example-sidenav grow"
+<mat-sidenav-container class="sidenav-container min-h-screen" autosize>
+    <mat-sidenav #sidenav [ngClass]="{'sidenav-collapsed' : !isExpanded}" class="sidenav grow"
         [mode]="isMobile ? 'side' : 'side'" opened="true">
         <div class="sidebar-close-expanded" *ngIf="isExpanded">
             <button mat-icon-button (click)="toggleSidebar()" class="sidebar-toggle-btn "
@@ -46,7 +46,7 @@
             </mat-expansion-panel>
         </mat-accordion>
     </mat-sidenav>
-    <mat-sidenav-content class="grow example-sidenav-content"
+    <mat-sidenav-content class="grow"
         [style.margin-left.px]="isMobile? 0 : isExpanded ? 240 : 60">
     </mat-sidenav-content>
 </mat-sidenav-container>
