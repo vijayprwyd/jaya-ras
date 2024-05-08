@@ -5,9 +5,22 @@
 
 html,
 body {
+    --mat-form-field-container-height:40px;
+    --mat-form-field-container-vertical-padding:4px;
+    --mdc-filled-button-container-height: 36px;
+    --mdc-outlined-text-field-outline-color: #000033;
+
+    --mdc-outlined-text-field-caret-color:#00539A;
+    --mdc-outlined-text-field-focus-outline-color:#00539A33;
+    --mdc-outlined-text-field-focus-label-text-color:#00539A;
+    --mdc-outlined-text-field-outline-color:#00000033;
+    --mdc-outlined-text-field-disabled-outline-color:rgba(0, 0, 0, 0.06);
+    --mdc-outlined-text-field-hover-outline-color:#00000033;
+    --mdc-outlined-text-field-outline-width:0.5px;
+    --mdc-outlined-text-field-focus-outline-width:0.5px;
+
     margin: 0;
     font-family: Roboto, "Helvetica Neue", sans-serif;
-
     height: 100%;
 }
 
@@ -47,4 +60,20 @@ div.mat-expansion-panel-body {
     color: #064c98 !important;
     border: 1px solid #064c98 !important;
     font-weight: bold !important
+}
+
+.mat-mdc-text-field-wrapper {
+    background: #F6F6F6;
+}
+
+.mat-mdc-form-field-infix {
+    display: flex;
+}
+
+.mdc-text-field--focused {
+    background-color: #F2F6FD;
+}
+
+.mdc-text-field--focused input {
+    color: #00539A !important;
 }
