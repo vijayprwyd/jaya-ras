@@ -9,26 +9,22 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { mockData } from './mock';
 
-const constructFormObject = (
-  tabNames: string[],
-  screenNames: string[],
-  labelNames: string[]
-) => {
-  const tabNamesGroup: any = {};
-  tabNames.forEach((tab) => {
-    const screenNamesGroup: any = {};
-    screenNames.forEach((screen) => {
-      const labelNamesGroup: any = {};
-      labelNames.forEach(
-        (label) => (labelNamesGroup[label] = new FormControl(''))
-      );
-      labelNamesGroup['selectAll'] = new FormControl('');
-      screenNamesGroup[screen] = new FormGroup(labelNamesGroup);
-    });
-    tabNamesGroup[tab] = new FormGroup(screenNamesGroup);
-  });
-  return new FormGroup(tabNamesGroup);
-};
+interface Tab {
+  tabId: number;
+  tabName: string;
+  visibility: string;
+  screens: {
+    screenId: number;
+    screenName: string;
+  }[];
+}
+
+interface Label {
+  labelId: number;
+  labelName: string;
+  labelDescription: string;
+  language: string;
+}
 
 @Component({
   standalone: true,
@@ -44,23 +40,23 @@ const constructFormObject = (
   ],
 })
 export class PermissionFormComponent implements OnInit {
-  name = new FormControl('');
-  tabNames: string[] = [];
-  screenNames: string[] = [];
-  labelNames: string[] = [];
   permissionForm: any;
+  tabs: Tab[] = [];
+  labels: Label[] = [];
 
   onSubmit() {
     console.log(this.permissionForm.value);
   }
 
-  toggleSelectAllPermission(
+  toggleLabelsForSelectedScreen(
     evt: MatCheckboxChange,
     screenName: string,
     tabName: string
   ) {
     const updatedFields: Record<string, boolean> = {};
-    this.labelNames.forEach((label) => (updatedFields[label] = evt.checked));
+    this.labels.forEach(
+      (label) => (updatedFields[label.labelName] = evt.checked)
+    );
     this.permissionForm.patchValue({
       [tabName]: {
         [screenName]: updatedFields,
@@ -68,49 +64,61 @@ export class PermissionFormComponent implements OnInit {
     });
   }
 
-  toggleSelectAllPermissions(evt: MatCheckboxChange, tabName: string) {
+  toggleLabelsForAllScreensInTab(evt: MatCheckboxChange, tab: Tab) {
     const updatedLabels: Record<string, boolean> = {};
     const updatedScreens: Record<string, Record<string, boolean>> = {};
 
-    this.labelNames.forEach((label) => (updatedLabels[label] = evt.checked));
-    this.screenNames.forEach(
-      (screen) => (updatedScreens[screen] = updatedLabels)
+    this.labels.forEach(
+      (label) => (updatedLabels[label.labelName] = evt.checked)
+    );
+    updatedLabels['selectAll'] = evt.checked;
+
+    tab.screens.forEach(
+      (screen) => (updatedScreens[screen.screenName] = updatedLabels)
     );
 
     this.permissionForm.patchValue({
-      [tabName]: updatedScreens,
+      [tab.tabName]: updatedScreens,
     });
   }
+
+  getScreenInfoByTab = (tabId: number) =>
+    mockData.screenDto
+      .filter((screen) => screen.screensId.tabId === tabId)
+      .map((screen) => ({
+        screenId: screen.screensId.screenId,
+        screenName: screen.screenName,
+      }));
+
+  transformData = () => {
+    this.tabs = mockData.tabDto.map((tab) => ({
+      ...tab,
+      screens: this.getScreenInfoByTab(tab.tabId),
+    }));
+    this.labels = mockData.labelDto;
+  };
+
+  constructFormObject = () => {
+    const tabNamesGroup: any = {};
+    this.tabs.forEach((tab) => {
+      const screenNamesGroup: any = {};
+      tab.screens.forEach((screen) => {
+        const labelNamesGroup: any = {};
+        this.labels.forEach(
+          (label) => (labelNamesGroup[label.labelName] = new FormControl(''))
+        );
+        labelNamesGroup['selectAll'] = new FormControl('');
+        screenNamesGroup[screen.screenName] = new FormGroup(labelNamesGroup);
+      });
+      tabNamesGroup[tab.tabName] = new FormGroup(screenNamesGroup);
+    });
+    this.permissionForm = new FormGroup(tabNamesGroup);
+  };
 
   async ngOnInit() {
     // API call here
     await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const tabIdNameMap = new Map(
-      mockData.tabDto.map((tab) => [tab.tabName, tab.tabId])
-    );
-
-    const screenIdTabsMap = new Map();
-    mockData.screenDto.forEach((screen) => {
-      const currentScreens = screenIdTabsMap.get(screen.screensId) ?? [];
-      currentScreens.push({
-        tabId: screen.screensId,
-        screenNames: screen.screenName,
-      });
-      this.screenNames.push(screen.screenName);
-    });
-
-    this.tabNames = [...tabIdNameMap.keys()];
-
-    const labelIdNamesMap = new Map(
-      mockData.labelDto.map((label) => [label.labelName, label.labelId])
-    );
-    this.labelNames = [...labelIdNamesMap.keys()];
-
-    this.permissionForm = constructFormObject(
-      this.tabNames,
-      this.screenNames,
-      this.labelNames
-    );
+    this.transformData();
+    this.constructFormObject();
   }
 }

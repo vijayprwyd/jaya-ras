@@ -1,33 +1,33 @@
 <form [formGroup]="permissionForm" (ngSubmit)="onSubmit()">
     <mat-tab-group>
-        <mat-tab *ngFor="let tab of tabNames" label="{{tab}}" formGroupName="{{tab}}" class="overflow-hidden">
+        <mat-tab *ngFor="let tab of tabs" label="{{tab.tabName}}" formGroupName="{{tab.tabName}}" class="overflow-hidden">
             <table class="w-full text-sm text-left max-w-6xl mx-auto">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                     <tr>
                         <th ></th>
                         <th >
-                            <mat-checkbox (change)="toggleSelectAllPermissions($event, tab)">
+                            <mat-checkbox (change)="toggleLabelsForAllScreensInTab($event, tab)">
                             </mat-checkbox>
                             Select All
                         </th>
-                        <th *ngFor="let label of labelNames; let i=index">
-                            {{label}}
+                        <th *ngFor="let label of labels; let i=index">
+                            {{label.labelName}}
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let screen of screenNames" formGroupName="{{screen}}" class="bg-white border-b">
+                    <tr *ngFor="let screen of tab.screens" formGroupName="{{screen.screenName}}" class="bg-white border-b">
                         <td class="text-left">
-                            {{screen}}
+                            {{screen.screenName}}
                         </td>
                         <mat-checkbox formControlName="selectAll"
-                            (change)="toggleSelectAllPermission($event, screen, tab)">
+                            (change)="toggleLabelsForSelectedScreen($event, screen.screenName, tab.tabName)">
                             <div class="hidden">Select All</div>
                         </mat-checkbox>
 
-                        <td *ngFor="let label of labelNames; let i=index" >
-                            <mat-checkbox formControlName="{{label}}">
-                                <div class="hidden">{{label}}</div>
+                        <td *ngFor="let label of labels; let i=index" >
+                            <mat-checkbox formControlName="{{label.labelName}}">
+                                <div class="hidden">{{label.labelName}}</div>
                             </mat-checkbox>
                         </td>
                     </tr>
