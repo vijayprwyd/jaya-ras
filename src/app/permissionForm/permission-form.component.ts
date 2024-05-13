@@ -8,23 +8,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { mockData } from './mock';
-
-interface Tab {
-  tabId: number;
-  tabName: string;
-  visibility: string;
-  screens: {
-    screenId: number;
-    screenName: string;
-  }[];
-}
-
-interface Label {
-  labelId: number;
-  labelName: string;
-  labelDescription: string;
-  language: string;
-}
+import { Label, RequestPayload, Tab } from './permissionTypes';
 
 @Component({
   standalone: true,
@@ -45,7 +29,32 @@ export class PermissionFormComponent implements OnInit {
   labels: Label[] = [];
 
   onSubmit() {
-    console.log(this.permissionForm.value);
+    const payload: RequestPayload = {
+      permissionDto: [],
+    };
+
+    Object.entries(this.permissionForm.value).forEach(
+      ([tabName, screenObj]) => {
+        Object.entries(screenObj as any).forEach(([screenName, labels]) => {
+          const screenId =
+            mockData.screenDto.find(
+              (screen) => screen.screenName === screenName
+            )?.screensId.screenId ?? 0;
+
+          const permissions = Object.values(labels as any)
+            .map((value) => (value ? '1' : '0'))
+            .join('');
+          payload.permissionDto.push({
+            permissionId: {
+              roleName: 'TODO',
+              screenId,
+            },
+            permissions,
+          });
+        });
+      }
+    );
+    alert(JSON.stringify(payload));
   }
 
   toggleLabelsForSelectedScreen(
@@ -105,9 +114,9 @@ export class PermissionFormComponent implements OnInit {
       tab.screens.forEach((screen) => {
         const labelNamesGroup: any = {};
         this.labels.forEach(
-          (label) => (labelNamesGroup[label.labelName] = new FormControl(''))
+          (label) => (labelNamesGroup[label.labelName] = new FormControl(false))
         );
-        labelNamesGroup['selectAll'] = new FormControl('');
+        labelNamesGroup['selectAll'] = new FormControl(false);
         screenNamesGroup[screen.screenName] = new FormGroup(labelNamesGroup);
       });
       tabNamesGroup[tab.tabName] = new FormGroup(screenNamesGroup);
