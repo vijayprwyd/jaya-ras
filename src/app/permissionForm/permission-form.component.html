@@ -1,0 +1,16 @@
+<form [formGroup]="permissionForm" (ngSubmit)="onSubmit()">
+    <mat-tab-group>
+        <mat-tab *ngFor="let tab of tabs; let i=index" label="{{tab}}" class="flex flex-col gap-2 min-h-screen"
+            formGroupName="{{tab}}">
+            <div *ngFor="let screen of screens; let i=index" class="flex gap-2 items-center" formGroupName="{{screen}}">
+                {{screen}}
+                <div *ngFor="let permission of permissions; let i=index" class="flex gap-2">
+                    <mat-checkbox formControlName="{{permission}}">
+                        {{permission}}
+                    </mat-checkbox>
+                </div>
+            </div>
+            <button mat-button class="blue-100" type="submit">Submit</button>
+        </mat-tab>
+    </mat-tab-group>
+</form>

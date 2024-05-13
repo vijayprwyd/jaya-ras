@@ -5,6 +5,7 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 
 import { CoreMaterialModule } from './core-material.module';
 import { LoginComponent } from './login/login.component';
+import { PermissionFormComponent } from './permissionForm/permission-form.component';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,7 @@ import { LoginComponent } from './login/login.component';
     SidenavComponent,
     ToolbarComponent,
     LoginComponent,
+    PermissionFormComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
