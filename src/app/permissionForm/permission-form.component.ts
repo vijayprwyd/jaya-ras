@@ -1,28 +1,33 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import {
+  MatCheckboxChange,
+  MatCheckboxModule,
+} from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { mockData } from './mock';
 
 const constructFormObject = (
-  tabs: string[],
-  screens: string[],
-  permissions: string[]
+  tabNames: string[],
+  screenNames: string[],
+  labelNames: string[]
 ) => {
-  const tabGroup: any = {};
-  tabs.forEach((tab) => {
-    const screenGroup: any = {};
-    screens.forEach((screen) => {
-      const permissionGroup: any = {};
-      permissions.forEach(
-        (permission) => (permissionGroup[permission] = new FormControl(''))
+  const tabNamesGroup: any = {};
+  tabNames.forEach((tab) => {
+    const screenNamesGroup: any = {};
+    screenNames.forEach((screen) => {
+      const labelNamesGroup: any = {};
+      labelNames.forEach(
+        (label) => (labelNamesGroup[label] = new FormControl(''))
       );
-      screenGroup[screen] = new FormGroup(permissionGroup);
+      labelNamesGroup['selectAll'] = new FormControl('');
+      screenNamesGroup[screen] = new FormGroup(labelNamesGroup);
     });
-    tabGroup[tab] = new FormGroup(screenGroup);
+    tabNamesGroup[tab] = new FormGroup(screenNamesGroup);
   });
-  return new FormGroup(tabGroup);
+  return new FormGroup(tabNamesGroup);
 };
 
 @Component({
@@ -38,19 +43,74 @@ const constructFormObject = (
     CommonModule,
   ],
 })
-export class PermissionFormComponent {
+export class PermissionFormComponent implements OnInit {
   name = new FormControl('');
-  tabs: string[] = ['Tab1', 'Tab2', 'Tab3'];
-  screens: string[] = ['Screen1', 'Screen2', 'Screen3'];
-  permissions: string[] = ['Create', 'Read', 'Update', 'Delete'];
+  tabNames: string[] = [];
+  screenNames: string[] = [];
+  labelNames: string[] = [];
+  permissionForm: any;
 
   onSubmit() {
     console.log(this.permissionForm.value);
   }
 
-  permissionForm = constructFormObject(
-    this.tabs,
-    this.screens,
-    this.permissions
-  );
+  toggleSelectAllPermission(
+    evt: MatCheckboxChange,
+    screenName: string,
+    tabName: string
+  ) {
+    const updatedFields: Record<string, boolean> = {};
+    this.labelNames.forEach((label) => (updatedFields[label] = evt.checked));
+    this.permissionForm.patchValue({
+      [tabName]: {
+        [screenName]: updatedFields,
+      },
+    });
+  }
+
+  toggleSelectAllPermissions(evt: MatCheckboxChange, tabName: string) {
+    const updatedLabels: Record<string, boolean> = {};
+    const updatedScreens: Record<string, Record<string, boolean>> = {};
+
+    this.labelNames.forEach((label) => (updatedLabels[label] = evt.checked));
+    this.screenNames.forEach(
+      (screen) => (updatedScreens[screen] = updatedLabels)
+    );
+
+    this.permissionForm.patchValue({
+      [tabName]: updatedScreens,
+    });
+  }
+
+  async ngOnInit() {
+    // API call here
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const tabIdNameMap = new Map(
+      mockData.tabDto.map((tab) => [tab.tabName, tab.tabId])
+    );
+
+    const screenIdTabsMap = new Map();
+    mockData.screenDto.forEach((screen) => {
+      const currentScreens = screenIdTabsMap.get(screen.screensId) ?? [];
+      currentScreens.push({
+        tabId: screen.screensId,
+        screenNames: screen.screenName,
+      });
+      this.screenNames.push(screen.screenName);
+    });
+
+    this.tabNames = [...tabIdNameMap.keys()];
+
+    const labelIdNamesMap = new Map(
+      mockData.labelDto.map((label) => [label.labelName, label.labelId])
+    );
+    this.labelNames = [...labelIdNamesMap.keys()];
+
+    this.permissionForm = constructFormObject(
+      this.tabNames,
+      this.screenNames,
+      this.labelNames
+    );
+  }
 }

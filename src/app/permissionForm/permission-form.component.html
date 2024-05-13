@@ -1,15 +1,38 @@
 <form [formGroup]="permissionForm" (ngSubmit)="onSubmit()">
     <mat-tab-group>
-        <mat-tab *ngFor="let tab of tabs; let i=index" label="{{tab}}" class="flex flex-col gap-2 min-h-screen"
-            formGroupName="{{tab}}">
-            <div *ngFor="let screen of screens; let i=index" class="flex gap-2 items-center" formGroupName="{{screen}}">
-                {{screen}}
-                <div *ngFor="let permission of permissions; let i=index" class="flex gap-2">
-                    <mat-checkbox formControlName="{{permission}}">
-                        {{permission}}
-                    </mat-checkbox>
-                </div>
-            </div>
+        <mat-tab *ngFor="let tab of tabNames" label="{{tab}}" formGroupName="{{tab}}" class="overflow-hidden">
+            <table class="w-full text-sm text-left max-w-6xl mx-auto">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                        <th ></th>
+                        <th >
+                            <mat-checkbox (change)="toggleSelectAllPermissions($event, tab)">
+                            </mat-checkbox>
+                            Select All
+                        </th>
+                        <th *ngFor="let label of labelNames; let i=index">
+                            {{label}}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let screen of screenNames" formGroupName="{{screen}}" class="bg-white border-b">
+                        <td class="text-left">
+                            {{screen}}
+                        </td>
+                        <mat-checkbox formControlName="selectAll"
+                            (change)="toggleSelectAllPermission($event, screen, tab)">
+                            <div class="hidden">Select All</div>
+                        </mat-checkbox>
+
+                        <td *ngFor="let label of labelNames; let i=index" >
+                            <mat-checkbox formControlName="{{label}}">
+                                <div class="hidden">{{label}}</div>
+                            </mat-checkbox>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <button mat-button class="blue-100" type="submit">Submit</button>
         </mat-tab>
     </mat-tab-group>
